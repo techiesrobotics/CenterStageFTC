@@ -76,8 +76,8 @@ public class TechiesHardwareWithoutDriveTrain
 
         // Save reference to Hardware map
         hwMap = aHWMap;
-        leftsensorRange = hwMap.get(DistanceSensor.class, "leftDistance");
-        rightsensorRange = hwMap.get(DistanceSensor.class, "rightDistance");
+        leftsensorRange = hwMap.get(DistanceSensor.class, "leftdistance");
+        rightsensorRange = hwMap.get(DistanceSensor.class, "rightdistance");
 
         claw = hwMap.get(Servo.class, "claw");
         claw.setPosition(0);

@@ -46,7 +46,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
  */
 @Autonomous(name = "Blue Pixel", group = "Concept")
 //@Disabled
-public class AutoBluePixel extends AutoBackdrop {
+public class AutoBluePixel extends AutoPixel {
 
     public double adjustTurn(double angle) {
         return angle;
@@ -59,10 +59,7 @@ public class AutoBluePixel extends AutoBackdrop {
     }
 
 
-    @Override
-    protected void goToBackdrop(int targetZone) {
 
-    }
 
 }
 

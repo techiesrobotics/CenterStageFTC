@@ -170,10 +170,10 @@ public abstract class TechiesOpMode extends LinearOpMode {
             double drivefb  = getDrivefb();  //-gamepad1.left_stick_y;
             double drivelr = getDrivelr(); //gamepad1.left_stick_x;
 
-            leftPower    = Range.clip(drivefb + turn + drivelr, -.55, .55) ;
-            rightPower   = Range.clip(drivefb - turn - drivelr, -.55, .55) ;
-            backleftPower   = Range.clip(drivefb + turn - drivelr, -.55, .55) ;
-            backrightPower   = Range.clip(drivefb - turn + drivelr, -.55, .55) ;
+            leftPower    = Range.clip(-drivefb - turn - drivelr, -.55, .55) ;
+            rightPower   = Range.clip(-drivefb + turn + drivelr, -.55, .55) ;
+            backleftPower   = Range.clip(-drivefb - turn + drivelr, -.55, .55) ;
+            backrightPower   = Range.clip(-drivefb + turn - drivelr, -.55, .55) ;
 
 
             // Send calculated power to wheels

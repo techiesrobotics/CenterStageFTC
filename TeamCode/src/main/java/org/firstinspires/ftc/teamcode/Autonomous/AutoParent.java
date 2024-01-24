@@ -29,6 +29,8 @@
 
 package org.firstinspires.ftc.teamcode.Autonomous;
 
+import static org.firstinspires.ftc.teamcode.DriverControl.TechiesOpMode.COUNTS_PER_INCH;
+
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
@@ -36,6 +38,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
@@ -56,6 +59,8 @@ public abstract class AutoParent extends LinearOpMode  {
 
     static final int TARGET_LEVEL_DEFAULT = 1;
     static final int TARGET_LEVEL_LEFT = 1;
+
+    private ElapsedTime runtime = new ElapsedTime();
     static final int TARGET_LEVEL_MIDDLE = 2;
     static final int TARGET_LEVEL_RIGHT = 3;
 
@@ -120,56 +125,39 @@ public abstract class AutoParent extends LinearOpMode  {
         goToTapeFromStart(adjustZone(position));
        dropPixel();
        goToBackdrop(position);
-        dropBackdrop(position);
+        dropBackdrop();
         park();
 
     }
-    protected void goToTapeFromStart(int targetZone) {
-
-
-        forward(26);
-        if (targetZone == LEFT_POSITION) {
-            odoDriveTrain.turn(Math.toRadians(-98));
-            sleep(800);
-            back(22);
-            /*Pose2d startPose = new Pose2d(0,0, Math.toRadians(0));
-            odoDriveTrain.setPoseEstimate(startPose);
-            Trajectory leftTape = odoDriveTrain.trajectoryBuilder(new Pose2d(0,0,0))
-                    .lineToLinearHeading(new Pose2d(25,0,Math.toRadians(45)))
-                    .build();
-            odoDriveTrain.followTrajectory(leftTape);
-            Pose2d startPose2 = leftTape.end();
-            odoDriveTrain.setPoseEstimate(startPose2);*/
-        } else if (targetZone == RIGHT_POSITION) {
-            odoDriveTrain.turn((Math.toRadians(-98)));
-        } else if (targetZone == MIDDLE_POSITION) {
-
-        }
-    }
+    abstract protected void goToTapeFromStart(int targetZone);
 
 
 
     protected void dropPixel(){
 
         robotCore.wrist.setPosition(1);
-        sleep(500);
-        robotCore.claw.setPosition(1);
-        sleep(500);
+        sleep(1500);
+        //robotCore.claw.setPosition(1);
+        //sleep(500);
         robotCore.wrist.setPosition(0);
         sleep(1500);
-        robotCore.claw.setPosition(0);
-        sleep(100);
+       // robotCore.claw.setPosition(0);
+        //sleep(100);
 
          // come back to wrist and claw
     }
     abstract protected void goToBackdrop(int targetZone);
-    protected void dropBackdrop(int targetZone){
-        if (targetZone == LEFT_POSITION) {
-
-        } else if (targetZone == RIGHT_POSITION) {
-
-        } else if (targetZone == MIDDLE_POSITION) {
-        }
+    protected void dropBackdrop(){
+        encoderArm(0.9, -18);//-4.65
+        robotCore.wrist.setPosition(0.25);
+        sleep(2400);
+        robotCore.claw.setPosition(1);
+        sleep(2000);
+        encoderArm(0.6, 18);//4.65
+        robotCore.wrist.setPosition(.2);
+        sleep(1200);
+        robotCore.claw.setPosition(0);
+        sleep(800);
     }
     abstract protected void park();
 
@@ -240,4 +228,39 @@ public abstract class AutoParent extends LinearOpMode  {
 
     }
 
+    public void encoderArm(double speed,
+                           double armInches) {
+        int newArmTarget;
+
+
+        // Ensure that the OpMode is still active
+        if (opModeIsActive()) {
+
+            // Determine new target position, and pass to motor controller
+            newArmTarget = robotCore.arm.getCurrentPosition() + (int)(armInches * COUNTS_PER_INCH);
+
+            robotCore.arm.setTargetPosition(newArmTarget);
+
+
+            // Turn On RUN_TO_POSITION
+            robotCore.arm.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+            // reset the timeout time and start motion.
+            runtime.reset();
+            robotCore.arm.setPower(Math.abs(speed));
+
+            // keep looping while we are still active, and there is time left, and both motors are running.
+            // Note: We use (isBusy() && isBusy()) in the loop test, which means that when EITHER motor hits
+            // its target position, the motion will stop.  This is "safer" in the event that the robot will
+            // always end the motion as soon as possible.
+            // However, if you require that BOTH motors have finished their moves before the robot continues
+            // onto the next step, use (isBusy() || isBusy()) in the loop test.
+
+
+
+
+            sleep(250);   // optional pause after each move.
+        }
+    }
 }
+
