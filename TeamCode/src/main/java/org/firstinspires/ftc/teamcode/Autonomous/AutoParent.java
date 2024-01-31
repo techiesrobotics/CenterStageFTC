@@ -86,7 +86,7 @@ public abstract class AutoParent extends LinearOpMode  {
     double batteryVoltageMultiplier = 1;
     public abstract double adjustTurn(double angle);
     public abstract int adjustZone(int zone);
-    public abstract double adjustTrajectorydistance(double distance);
+    public abstract int adjustTrajectorydistance(int distance);
 
 
     protected int position = TARGET_LEVEL_DEFAULT;
@@ -104,29 +104,14 @@ public abstract class AutoParent extends LinearOpMode  {
         waitForStart();
         doMissions();
     }
-    protected int determineTargetZone(Telemetry telemetry){
-        if (robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) > 12 && robotCore.leftsensorRange.getDistance(DistanceUnit.INCH) < 18){
-            position = LEFT_POSITION;
-        } else if (robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) > 10 && robotCore.rightsensorRange.getDistance(DistanceUnit.INCH) < 14){
-            position = RIGHT_POSITION;
-        } else {
-            position = MIDDLE_POSITION;
-        }
-        telemetry.addData("position", position);
-        telemetry.addData("deviceName", robotCore.leftsensorRange.getDeviceName() );
-        telemetry.addData("range", String.format("%.01f in", robotCore.leftsensorRange.getDistance(DistanceUnit.INCH)));
-        telemetry.addData("deviceName", robotCore.rightsensorRange.getDeviceName() );
-        telemetry.addData("range", String.format("%.01f in", robotCore.rightsensorRange.getDistance(DistanceUnit.INCH)));
-        telemetry.update();
-        return 1;
-    }
+    abstract protected int determineTargetZone(Telemetry telemetry);
 
     protected void doMissions() {
         goToTapeFromStart(adjustZone(position));
-       dropPixel();
-       goToBackdrop(position);
-        dropBackdrop();
-        park();
+        dropPixel();
+        goToBackdrop(adjustZone(position));
+        //dropBackdrop();
+       // park();
 
     }
     abstract protected void goToTapeFromStart(int targetZone);
@@ -148,16 +133,16 @@ public abstract class AutoParent extends LinearOpMode  {
     }
     abstract protected void goToBackdrop(int targetZone);
     protected void dropBackdrop(){
-        encoderArm(0.9, -18);//-4.65
-        robotCore.wrist.setPosition(0.25);
-        sleep(2400);
+        encoderArm(0.9, -23);//-4.65
+        sleep(1500);
+        robotCore.wrist.setPosition(0.4);
+        sleep(1900);
         robotCore.claw.setPosition(1);
-        sleep(2000);
-        encoderArm(0.6, 18);//4.65
+        sleep(1500);
+        encoderArm(0.7, 23);//18
+        sleep(1900);
         robotCore.wrist.setPosition(.2);
-        sleep(1200);
-        robotCore.claw.setPosition(0);
-        sleep(800);
+        sleep(1000);
     }
     abstract protected void park();
 

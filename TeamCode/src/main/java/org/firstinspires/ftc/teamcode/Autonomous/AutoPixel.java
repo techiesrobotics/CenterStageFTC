@@ -4,15 +4,17 @@ abstract public class AutoPixel extends AutoParent {
 
     protected void goToTapeFromStart(int targetZone) {
 
-        forward(27);
+        forward(26);
         if (targetZone == LEFT_POSITION) {
-            odoDriveTrain.turn(Math.toRadians(98));
+            odoDriveTrain.turn(Math.toRadians(adjustTurn(98)));
             sleep(400);
-            forward(4);
+
 
         } else if (targetZone == RIGHT_POSITION) {
-            odoDriveTrain.turn((Math.toRadians(-98)));
+            odoDriveTrain.turn((Math.toRadians(adjustTurn(-98))));
             sleep(400);
+            back(2);
+            straferight(3);
         } else if (targetZone == MIDDLE_POSITION) {
             sleep(400);
             strafeleft(5);
@@ -22,23 +24,24 @@ abstract public class AutoPixel extends AutoParent {
 
     protected void goToBackdrop(int targetZone){
         if (targetZone == LEFT_POSITION) {
-            back(4);
-            odoDriveTrain.turn((Math.toRadians(-98)));
+            back(2);
+            odoDriveTrain.turn((Math.toRadians(adjustTurn(-98))));
             back(25);
-            odoDriveTrain.turn((Math.toRadians(-98)));
+            odoDriveTrain.turn((Math.toRadians(adjustTurn(-98))));
             back(86);
-            straferight(11);
-            strafeleft(23);
+            straferight(adjustTrajectorydistance(13));
+            strafeleft(adjustTrajectorydistance(20));
             sleep(400);
 
         } else if (targetZone == RIGHT_POSITION) {
             //lineToSpline(-38, 8, 0);
-            back(2);
+            strafeleft(3);
             odoDriveTrain.turn((Math.toRadians(98)));
-            back(25);
+            back(25 );
             odoDriveTrain.turn((Math.toRadians(-98)));
-            back(85);
-            strafeleft(28);
+            back(86);
+            straferight(13);
+            strafeleft(33);
             sleep(400);
         } else if (targetZone == MIDDLE_POSITION) {
           //  back(38);
@@ -47,11 +50,12 @@ abstract public class AutoPixel extends AutoParent {
             sleep(400);
             odoDriveTrain.turn((Math.toRadians(-98)));
             back(85);
-            straferight(10);
+            straferight(13);
             strafeleft(29);
             sleep(400);
 
         }
+
     }
 
     @Override

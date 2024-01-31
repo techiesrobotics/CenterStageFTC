@@ -84,7 +84,7 @@ public class TechiesRobotHardware {
 
         leftDrive.setPower(0.0);
         rightDrive.setPower(0.0);
-        leftBack.setPower(0.0);
+        rightBack.setPower(0.0);
         rightBack.setPower(0.0);
 
         // Set all motors to run without encoders.

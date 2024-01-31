@@ -3,15 +3,18 @@ package org.firstinspires.ftc.teamcode.Autonomous;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 
+import kotlin.math.UMathKt;
+
 abstract public class AutoBackdrop extends AutoParent{
 
     protected void goToTapeFromStart(int targetZone) {
-
-        forward(26);
+        //make it move more if it is on position 2
+        forward(26);// -(targetZone%2 -1)*2);
         if (targetZone == LEFT_POSITION) {
-            odoDriveTrain.turn(Math.toRadians(-98));
+            odoDriveTrain.turn(adjustTurn(Math.toRadians(-98)));
             sleep(800);
-            back(23);
+            back(20);
+            straferight(4);
             /*Pose2d startPose = new Pose2d(0,0, Math.toRadians(0));
             odoDriveTrain.setPoseEstimate(startPose);
             Trajectory leftTape = odoDriveTrain.trajectoryBuilder(new Pose2d(0,0,0))
@@ -21,14 +24,15 @@ abstract public class AutoBackdrop extends AutoParent{
             Pose2d startPose2 = leftTape.end();
             odoDriveTrain.setPoseEstimate(startPose2);*/
         } else if (targetZone == RIGHT_POSITION) {
-            odoDriveTrain.turn((Math.toRadians(-98)));
+            odoDriveTrain.turn(adjustTurn(Math.toRadians(-98)));
         } else if (targetZone == MIDDLE_POSITION) {
 
         }
     }
     protected void goToBackdrop(int targetZone){
         if (targetZone == LEFT_POSITION) {
-            lineToSpline(-16,-8,0);
+            strafeleft(4);
+            lineToSpline(-15,adjustTrajectorydistance(-7),0);
             /*Pose2d startPose = new Pose2d(0,0, Math.toRadians(0));
             odoDriveTrain.setPoseEstimate(startPose);
             Trajectory leftTape = odoDriveTrain.trajectoryBuilder(new Pose2d(0,0,0))
@@ -39,17 +43,18 @@ abstract public class AutoBackdrop extends AutoParent{
             Pose2d startPose2 = leftTape.end();
             odoDriveTrain.setPoseEstimate(startPose2);*/
         } else if (targetZone == RIGHT_POSITION) {
-            lineToSpline(-38, 8, 0);
+            lineToSpline(-38, adjustTrajectorydistance(8), 0);
         } else if (targetZone == MIDDLE_POSITION) {
-            odoDriveTrain.turn(Math.toRadians(-98));
-            back(38);
-
+            back(2);
+            odoDriveTrain.turn(adjustTurn(Math.toRadians(-98)));
+            lineToSpline(-35, adjustTrajectorydistance(4), 0);
         }
 
     }
 
     protected void park() {
-        straferight(30);
+        straferight(adjustTrajectorydistance(30));
+        back(8);
         //odoDriveTrain.turn(Math.toRadians(adjustTurn(90)));
         //back(20);
         //odoDriveTrain.turn(Math.toRadians(adjustTurn(-90)));
